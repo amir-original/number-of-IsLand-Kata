@@ -1,68 +1,55 @@
 public class NumberOfIsLand {
 
+    private static final int LAND = 1;
+    private static final int WATER = 0;
+
     private final int[][] grid;
 
-    public NumberOfIsLand(int[][] grid){
+    public NumberOfIsLand(int[][] grid) {
         this.grid = grid;
     }
+
     public int numIsLands() {
-        int result = 0;
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                if (isLand(grid[i][j], 1)) {
-                    result++;
-                    dfs(grid, i, j);
+        int numIsLand = 0;
+        for (int row = 0; row < grid.length; row++) {
+            for (int col = 0; col < grid[0].length; col++) {
+                if (isLand(grid[row][col])) {
+                    numIsLand++;
+                    dfs(row, col);
                 }
             }
         }
-        return result;
+        return numIsLand;
     }
 
-    private boolean isLand(int i1, int i) {
-        return i1 == i;
+    private boolean isLand(int cell) {
+        return cell == LAND;
     }
 
-    private void dfs(int[][] grid, int row, int col) {
-        if (!isValidCell(grid, row, col)) {
+    private void dfs(int row, int col) {
+        if (!isValidCell(row, col))
             return;
-        }
-        grid[row][col] = 0;
-        int[][] directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-        for (int[] d : directions) {
-            dfs(grid, row + d[0], col + d[1]);
-        }
+
+        markCellAsVisited(row, col);
+        checkCellNeighbors(row, col);
     }
 
-    private boolean isValidCell(int[][] grid, int row, int col) {
+    private boolean isValidCell(int row, int col) {
         try {
-            return isLand(grid[row][col], 1);
+            return isLand(grid[row][col]);
         } catch (Exception e) {
             return false;
         }
     }
 
-
-    public int numLands(int[][] grid) {
-        int lands = 0;
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                if (isLand(grid[i][j], 1)) {
-                    lands++;
-                }
-            }
-        }
-        return lands;
+    // If the cell is valid, let's first mark it as a water cell to make sure we won't visit it again.
+    private void markCellAsVisited(int row, int col) {
+        grid[row][col] = WATER;
     }
 
-    public int numWater(int[][] grid) {
-        int water = 0;
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                if (isLand(grid[i][j], 0)) {
-                    water++;
-                }
-            }
-        }
-        return water;
+    private void checkCellNeighbors(int row, int col) {
+        int[][] directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (int[] d : directions)
+            dfs(row + d[0], col + d[1]);
     }
 }
