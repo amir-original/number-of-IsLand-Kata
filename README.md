@@ -23,3 +23,4 @@ Input:
 
 Output: 3
 ```
+more info about DFS (Depth-First-Search): https://en.wikipedia.org/wiki/Depth-first_search
